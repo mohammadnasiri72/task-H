@@ -12,11 +12,14 @@ import React from "react";
     };
   }
   
-export default function TabTodo() {
+export default function TabTodo({setValTab}) {
     const [value, setValue] = React.useState(0);
+    console.log(value);
+    
 
     const handleChange = (event, newValue) => {
       setValue(newValue);
+      setValTab(newValue);
     };
   
   return (

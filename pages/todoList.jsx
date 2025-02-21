@@ -12,8 +12,8 @@ export default function todoList() {
   const [newTodo, setNewTodo] = useState("");
   const [user, setUser] = useState({});
   const [desc, setDesc] = useState("");
+  const [valTab, setValTab] = useState(0);
 
-  console.log(todos);
 
   useEffect(() => {
     const userData = localStorage.getItem("user");
@@ -39,9 +39,11 @@ export default function todoList() {
       .then((res) => {
         localStorage.setItem("user", JSON.stringify(user));
         setNewTodo("");
+        setDesc("");
       })
       .catch((err) => {});
   };
+  
 
   return (
     <>
@@ -60,6 +62,13 @@ export default function todoList() {
               value={newTodo}
               onChange={(e) => setNewTodo(e.target.value)}
             />
+            <input
+              type="text"
+              className="w-full mb-4 rounded-md py-2 px-4 border border-orange-600 focus:outline-none focus:border-2 focus:bg-orange-100"
+              placeholder="جزئیات تسک را وارد کنید"
+              value={desc}
+              onChange={(e) => setDesc(e.target.value)}
+            />
 
             <button
               onClick={addtodo}
@@ -69,13 +78,15 @@ export default function todoList() {
             </button>
           </div>
           <div className="bg-white md:px-16 shadow-md rounded-md">
-            <TabTodo />
+            <TabTodo setValTab={setValTab}/>
             <h2 className="text-2xl md:my-6">
               <i class="fa fa-list px-3" aria-hidden="true"></i>
               لیست تسک های من
             </h2>
             <ul>
-              {todos.map((todo, i) => (
+              {todos
+              .filter((e)=> valTab===0 ? e : valTab===1 ?  e.completed : !e.completed)
+              .map((todo, i) => (
                 <li
                   key={i}
                   className={
@@ -109,7 +120,7 @@ export default function todoList() {
                       setTodos={setTodos}
                       user={user}
                     />
-                    <ModalDescTodo />
+                    <ModalDescTodo todo={todo}/>
                     <ModalDeleteTodo
                       todo={todo}
                       todos={todos}
